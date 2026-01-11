@@ -1,12 +1,11 @@
 from sqlalchemy.orm import Session
-from models import Article
+from backend.models import Article
 import re
 
 
 def get_related_posts(db: Session, limit: int = 5):
     """
     Fetch latest published articles
-    (STEP 17.2.1)
     """
     return (
         db.query(Article)
@@ -26,7 +25,7 @@ def _slugify(text: str) -> str:
 
 def build_related_posts_html(posts) -> str:
     """
-    STEP 17.2.2 — HTML Builder
+    Builds HTML block for related articles
     """
     if not posts:
         return ""
