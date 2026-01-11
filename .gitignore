@@ -27,6 +27,7 @@ __pycache__/
 # OS files
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Editor / IDE
 .vscode/
@@ -42,5 +43,5 @@ dist/
 *.tmp
 *.temp
 
-# JSON outputs (generated artifacts)
-*.json
+# Generated outputs
+output/
