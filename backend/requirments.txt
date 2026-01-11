@@ -1,0 +1,18 @@
+# Web framework
+fastapi
+uvicorn
+
+# Environment variables
+python-dotenv
+
+# Database ORM
+sqlalchemy
+
+# Scheduler (used in services.scheduler)
+apscheduler
+
+# Data validation
+pydantic
+
+# Google Gemini SDK (used in agentic_brain.py)
+google-genai

@@ -1,0 +1,1 @@
+AUTO_PUBLISH_ENABLED: bool = True

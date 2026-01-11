@@ -1,0 +1,46 @@
+# Environment & secrets
+.env
+.env.*
+credentials/
+secrets/
+*.key
+*.pem
+
+# Virtual environments
+venv/
+.venv/
+blogger_env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Build / cache
+build/
+dist/
+.eggs/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.temp
+
+# JSON outputs (generated artifacts)
+*.json
