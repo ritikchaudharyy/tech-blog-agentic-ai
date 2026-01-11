@@ -1,3 +1,25 @@
+# Core API
 fastapi
 uvicorn
+pydantic
+
+# Environment variables
+python-dotenv
+
+# Database
 sqlalchemy
+
+# Scheduler
+apscheduler
+
+# AI / Gemini
+google-genai
+
+# Google APIs (Blogger publishing)
+google-api-python-client
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+
+# HTTP utilities
+requests
