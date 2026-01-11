@@ -1,19 +1,19 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from database import SessionLocal
-from models import Article
-from auth import verify_owner
-from schemas import GenerateDraftRequest
+from backend.database import SessionLocal
+from backend.models import Article
+from backend.auth import verify_owner
+from backend.schemas import GenerateDraftRequest
 
-from services.publishers.blogger import BloggerPublisher
-from services.seo_generator import generate_seo
-from services.blog_structure import generate_structured_blog
-from services.html_builder import build_blog_html
-from services.related_block import get_related_posts
-from services.memory_trending_picker import pick_memory_safe_trending_topic
-from services.trend_memory_service import record_trend_usage
-from services.dashboard_service import (
+from backend.services.publishers.blogger import BloggerPublisher
+from backend.services.seo_generator import generate_seo
+from backend.services.blog_structure import generate_structured_blog
+from backend.services.html_builder import build_blog_html
+from backend.services.related_block import get_related_posts
+from backend.services.memory_trending_picker import pick_memory_safe_trending_topic
+from backend.services.trend_memory_service import record_trend_usage
+from backend.services.dashboard_service import (
     get_overview_stats,
     get_low_view_articles,
     get_top_articles,
