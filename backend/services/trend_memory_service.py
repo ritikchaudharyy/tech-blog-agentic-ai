@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-from models_trend_memory import TrendMemory
+
+from backend.models_trend_memory import TrendMemory
+
 
 COOLDOWN_DAYS = 14
 MAX_USAGE = 3
@@ -17,9 +19,7 @@ def record_trend_usage(db: Session, topic: str):
         record.times_used += 1
         record.last_used_at = datetime.utcnow()
     else:
-        record = TrendMemory(
-            topic=topic
-        )
+        record = TrendMemory(topic=topic)
         db.add(record)
 
     db.commit()
