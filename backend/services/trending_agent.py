@@ -1,4 +1,5 @@
-from services.agentic_brain import generate_canonical_article
+from backend.services.agentic_brain import generate_canonical_article
+
 
 def get_trending_topics(
     master_prompt: str,
