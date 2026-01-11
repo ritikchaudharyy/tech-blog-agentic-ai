@@ -1,4 +1,5 @@
-from services.publishers.base import BasePublisher
+from backend.services.publishers.base import BasePublisher
+
 
 class WordPressPublisher(BasePublisher):
     def publish(self, article):
