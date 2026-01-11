@@ -1,5 +1,5 @@
 import json
-from services.agentic_brain import generate_canonical_article
+from backend.services.agentic_brain import generate_canonical_article
 
 
 BLOG_STRUCTURE_PROMPT = """
