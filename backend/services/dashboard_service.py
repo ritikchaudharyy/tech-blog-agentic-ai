@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Article
-from models_trend_memory import TrendMemory
+from backend.models import Article
+from backend.models_trend_memory import TrendMemory
 
 def get_overview_stats(db: Session):
     total = db.query(Article).count()
