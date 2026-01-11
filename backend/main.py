@@ -8,35 +8,33 @@ import logging
 load_dotenv()
 
 # =========================
-# DATABASE & MODELS
-# =========================
-from database import engine
-import models
-
-# =========================
-# ROUTES
-# =========================
-from routes.public import router as public_router
-from routes.owner import router as owner_router
-
-# =========================
-# SERVICES
-# =========================
-from services.scheduler import start_scheduler
-
-
-# =========================
 # LOGGING CONFIG
 # =========================
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# =========================
+# DATABASE & MODELS
+# =========================
+from backend.database import engine
+from backend import models
+
+# =========================
+# ROUTES
+# =========================
+from backend.routes.public import router as public_router
+from backend.routes.owner import router as owner_router
+
+# =========================
+# SERVICES
+# =========================
+from backend.services.scheduler import start_scheduler
 
 
 # =========================
 # DATABASE INIT
 # =========================
 models.Base.metadata.create_all(bind=engine)
-
 
 # =========================
 # FASTAPI APP
@@ -47,13 +45,11 @@ app = FastAPI(
     version="1.0.0"
 )
 
-
 # =========================
 # ROUTES REGISTER
 # =========================
 app.include_router(public_router)
 app.include_router(owner_router)
-
 
 # =========================
 # STARTUP EVENT
@@ -63,9 +59,8 @@ def startup_event():
     try:
         start_scheduler()
         logger.info("Scheduler started successfully")
-    except Exception as e:
-        logger.error(f"Scheduler failed to start: {e}")
-
+    except Exception:
+        logger.exception("Scheduler failed to start")
 
 # =========================
 # HEALTH CHECK

@@ -15,7 +15,6 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise RuntimeError("GEMINI_API_KEY is missing in environment variables")
 
-
 # =========================
 # GENAI CLIENT
 # =========================
@@ -53,6 +52,6 @@ IMPORTANT RULES:
 
         return response.text.strip()
 
-    except Exception as e:
+    except Exception:
         logger.exception("Gemini content generation failed")
         return ""

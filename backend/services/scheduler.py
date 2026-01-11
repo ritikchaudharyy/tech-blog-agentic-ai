@@ -2,13 +2,13 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 import logging
 
-from database import SessionLocal
-from models import Article
-from services.trending_agent import get_trending_topics
-from services.prompt_loader import load_master_prompt
-from services.agentic_brain import generate_canonical_article
-from services.publishers.blogger import BloggerPublisher
-from services.scheduler_state import AUTO_PUBLISH_ENABLED
+from backend.database import SessionLocal
+from backend.models import Article
+from backend.services.trending_agent import get_trending_topics
+from backend.services.prompt_loader import load_master_prompt
+from backend.services.agentic_brain import generate_canonical_article
+from backend.services.publishers.blogger import BloggerPublisher
+from backend.services.scheduler_state import AUTO_PUBLISH_ENABLED
 
 
 # =========================
@@ -82,7 +82,7 @@ def daily_auto_publish():
         logger.info("Article auto-published successfully")
         logger.info(f"Published URL: {result.get('url')}")
 
-    except Exception as e:
+    except Exception:
         logger.exception("Scheduler execution error")
 
     finally:
