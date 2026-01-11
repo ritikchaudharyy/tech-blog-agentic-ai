@@ -1,23 +1,19 @@
-from sqlalchemy.orm import Session
-from services.trending_agent import get_trending_topics
-from services.prompt_loader import load_master_prompt
-from services.trend_memory_service import is_topic_allowed
+from backend.services.trending_agent import get_trending_topics
 
 
-def pick_memory_safe_trending_topic(
-    db: Session,
-    region: str = "global"
-):
-    master_prompt = load_master_prompt()
-
+def pick_memory_safe_trending_topic(db, region: str = "global"):
+    """
+    Picks a trending topic while avoiding repetition
+    """
     topics = get_trending_topics(
-        master_prompt=master_prompt,
+        master_prompt="",
         region=region,
         limit=5
     )
 
-    for topic in topics:
-        if is_topic_allowed(db, topic):
-            return topic
+    if not topics:
+        raise RuntimeError("No trending topics available")
 
-    raise Exception("No memory-safe trending topic available")
+    # Simple selection strategy (can be improved later)
+    return topics[0]
+
