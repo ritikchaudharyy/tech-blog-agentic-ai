@@ -1,11 +1,25 @@
+from datetime import datetime
 from sqlalchemy.orm import Session
+
 from backend.models import Article
 from backend.models_trend_memory import TrendMemory
+
+
+def _article_age_days(article: Article) -> int:
+    if not article.published_at:
+        return 1
+    days = (datetime.utcnow() - article.published_at).days
+    return max(days, 1)
+
+
+# =========================
+# OVERVIEW
+# =========================
 
 def get_overview_stats(db: Session):
     total = db.query(Article).count()
     published = db.query(Article).filter(Article.status == "published").count()
-    drafts = db.query(Article).filter(Article.status != "published").count()
+    drafts = total - published
 
     return {
         "total_articles": total,
@@ -13,6 +27,10 @@ def get_overview_stats(db: Session):
         "draft_articles": drafts
     }
 
+
+# =========================
+# LOW VIEW ARTICLES
+# =========================
 
 def get_low_view_articles(db: Session, limit: int = 5):
     articles = (
@@ -23,16 +41,25 @@ def get_low_view_articles(db: Session, limit: int = 5):
         .all()
     )
 
-    return [
-        {
+    results = []
+    for a in articles:
+        age_days = _article_age_days(a)
+        velocity = round(a.view_count / age_days, 2)
+
+        results.append({
             "id": a.id,
             "title": a.title,
             "views": a.view_count,
+            "views_per_day": velocity,
             "rewrite_count": a.rewrite_count
-        }
-        for a in articles
-    ]
+        })
 
+    return results
+
+
+# =========================
+# TOP ARTICLES
+# =========================
 
 def get_top_articles(db: Session, limit: int = 5):
     articles = (
@@ -43,15 +70,26 @@ def get_top_articles(db: Session, limit: int = 5):
         .all()
     )
 
-    return [
-        {
+    results = []
+    for a in articles:
+        age_days = _article_age_days(a)
+        velocity = round(a.view_count / age_days, 2)
+        predicted = int(velocity * 7)
+
+        results.append({
             "id": a.id,
             "title": a.title,
-            "views": a.view_count
-        }
-        for a in articles
-    ]
+            "views": a.view_count,
+            "views_per_day": velocity,
+            "predicted_next_7_days": predicted
+        })
 
+    return results
+
+
+# =========================
+# TRENDING MEMORY
+# =========================
 
 def get_trending_memory_stats(db: Session, limit: int = 5):
     records = (
@@ -69,3 +107,36 @@ def get_trending_memory_stats(db: Session, limit: int = 5):
         }
         for r in records
     ]
+
+
+# =========================
+# VIEW TRENDS (NEW)
+# =========================
+
+def get_view_trends(db: Session, limit: int = 10):
+    """
+    Velocity-based trend analysis
+    """
+
+    articles = (
+        db.query(Article)
+        .filter(Article.status == "published")
+        .all()
+    )
+
+    trends = []
+    for a in articles:
+        age_days = _article_age_days(a)
+        velocity = round(a.view_count / age_days, 2)
+
+        trends.append({
+            "id": a.id,
+            "title": a.title,
+            "views": a.view_count,
+            "views_per_day": velocity
+        })
+
+    # Sort by velocity (fastest growing)
+    trends.sort(key=lambda x: x["views_per_day"], reverse=True)
+
+    return trends[:limit]
