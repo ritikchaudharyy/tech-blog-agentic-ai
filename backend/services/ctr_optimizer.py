@@ -4,29 +4,33 @@ from sqlalchemy.orm import Session
 from backend.models import Article
 from backend.services.agentic_brain import generate_canonical_article
 
-
-WEAK_VIEW_THRESHOLD = 50
+# =========================
+# CONFIG
+# =========================
+WEAK_VIEW_THRESHOLD = 50          # proxy CTR signal
 MAX_REWRITE_LIMIT = 2
 GRACE_PERIOD_HOURS = 24
 
 
 def is_ctr_weak(article: Article) -> bool:
     """
-    Decide if article needs CTR optimization
+    Decide whether article is eligible for CTR optimization
     """
 
-    # 1. Grace period check (very important)
-    if not article.published_at:
+    # 1️⃣ Must be published
+    if article.status != "published" or not article.published_at:
         return False
 
-    if datetime.utcnow() - article.published_at < timedelta(hours=GRACE_PERIOD_HOURS):
+    # 2️⃣ Grace period check
+    age = datetime.utcnow() - article.published_at
+    if age < timedelta(hours=GRACE_PERIOD_HOURS):
         return False
 
-    # 2. Enough views? Then skip
+    # 3️⃣ View threshold
     if article.view_count >= WEAK_VIEW_THRESHOLD:
         return False
 
-    # 3. Rewrite limit reached?
+    # 4️⃣ Rewrite limit
     if article.rewrite_count >= MAX_REWRITE_LIMIT:
         return False
 
@@ -35,33 +39,32 @@ def is_ctr_weak(article: Article) -> bool:
 
 def generate_ctr_optimized_seo(article: Article) -> dict:
     """
-    Generate better SEO title & meta description using AI
+    Generates improved SEO title & meta description
+    using smarter CTR prompt
     """
 
     prompt = f"""
-You are a senior SEO strategist.
+You are an expert CTR optimization strategist.
 
 TASK:
-Improve click-through rate for the following article.
+1. Identify TOP 3 important keywords from the content
+2. Generate 3 SEO title variations
+3. Internally select the BEST performing one
 
-STRICT RULES:
-- Output ONLY valid JSON
-- No explanations
-- No markdown
+RULES:
+- Title max 60 characters
+- Meta description max 155 characters
+- Professional & curiosity-driven
+- No clickbait
 - No emojis
-- Professional tone (no clickbait)
-
-PROCESS:
-1. Extract top 3 SEO keywords from the content
-2. Generate 3 SEO title variations (max 60 chars)
-3. Pick the BEST title (curiosity-driven, professional)
-4. Generate meta description (max 155 chars)
+- No markdown
+- Output ONLY valid JSON
 
 JSON FORMAT:
 {{
   "seo_title": "...",
   "meta_description": "...",
-  "keywords": ["keyword1", "keyword2", "keyword3"]
+  "keywords": "kw1,kw2,kw3"
 }}
 
 Article Title:
@@ -72,19 +75,24 @@ Article Content:
 """
 
     raw = generate_canonical_article(
-        master_prompt="",
-        user_topic=prompt
+        master_prompt=prompt,
+        user_topic=""
     )
 
     try:
         import json
         data = json.loads(raw)
+
         return {
             "seo_title": data.get("seo_title", article.seo_title),
-            "meta_description": data.get("meta_description", article.meta_description)
+            "meta_description": data.get(
+                "meta_description",
+                article.meta_description
+            )
         }
+
     except Exception:
-        # Safe fallback (never crash)
+        # fallback safety
         return {
             "seo_title": article.seo_title,
             "meta_description": article.meta_description
@@ -93,7 +101,7 @@ Article Content:
 
 def optimize_article_ctr(db: Session, article_id: int) -> bool:
     """
-    Main CTR optimization pipeline
+    Full CTR optimization pipeline
     """
 
     article = db.query(Article).filter(Article.id == article_id).first()
