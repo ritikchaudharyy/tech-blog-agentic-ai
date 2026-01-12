@@ -1,25 +1,45 @@
 from sqlalchemy.orm import Session
-from models import Article
-from services.ctr_optimizer import optimize_article_ctr
+import logging
+from datetime import datetime, timedelta
+
+from backend.database import SessionLocal
+from backend.models import Article
+from backend.services.ctr_optimizer import optimize_article_ctr
+
+logger = logging.getLogger(__name__)
+
+CTR_CHECK_DELAY_HOURS = 24
 
 
-def run_ctr_optimization_cycle(db: Session, limit: int = 5):
+def run_ctr_optimization():
     """
-    Optimize CTR for limited number of weak articles
+    Runs CTR optimization for eligible articles
     """
-    articles = (
-        db.query(Article)
-        .filter(Article.status == "published")
-        .order_by(Article.view_count.asc())
-        .limit(limit)
-        .all()
-    )
+    db: Session = SessionLocal()
+    try:
+        logger.info("CTR optimization job started")
 
-    optimized = 0
+        cutoff_time = datetime.utcnow() - timedelta(hours=CTR_CHECK_DELAY_HOURS)
 
-    for article in articles:
-        success = optimize_article_ctr(db, article.id)
-        if success:
-            optimized += 1
+        articles = (
+            db.query(Article)
+            .filter(Article.status == "published")
+            .filter(Article.published_at <= cutoff_time)
+            .all()
+        )
 
-    return optimized
+        optimized_count = 0
+
+        for article in articles:
+            success = optimize_article_ctr(db, article.id)
+            if success:
+                optimized_count += 1
+                logger.info(f"CTR optimized for article ID {article.id}")
+
+        logger.info(f"CTR job completed. Optimized {optimized_count} articles.")
+
+    except Exception as e:
+        logger.exception("CTR scheduler job failed")
+
+    finally:
+        db.close()
