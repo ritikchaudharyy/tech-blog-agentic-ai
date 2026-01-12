@@ -10,7 +10,10 @@ load_dotenv()
 # =========================
 # LOGGING CONFIG
 # =========================
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s:%(name)s:%(message)s"
+)
 logger = logging.getLogger(__name__)
 
 # =========================
@@ -29,7 +32,6 @@ from backend.routes.owner import router as owner_router
 # SERVICES
 # =========================
 from backend.services.scheduler import start_scheduler
-
 
 # =========================
 # DATABASE INIT
