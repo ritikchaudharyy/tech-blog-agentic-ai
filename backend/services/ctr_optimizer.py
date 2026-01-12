@@ -1,61 +1,101 @@
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from models import Article
-from services.agentic_brain import generate_canonical_article
+
+from backend.models import Article
+from backend.services.agentic_brain import generate_canonical_article
 
 
 WEAK_VIEW_THRESHOLD = 50
 MAX_REWRITE_LIMIT = 2
+GRACE_PERIOD_HOURS = 24
 
 
 def is_ctr_weak(article: Article) -> bool:
     """
     Decide if article needs CTR optimization
     """
+
+    # 1. Grace period check (very important)
+    if not article.published_at:
+        return False
+
+    if datetime.utcnow() - article.published_at < timedelta(hours=GRACE_PERIOD_HOURS):
+        return False
+
+    # 2. Enough views? Then skip
     if article.view_count >= WEAK_VIEW_THRESHOLD:
         return False
 
+    # 3. Rewrite limit reached?
     if article.rewrite_count >= MAX_REWRITE_LIMIT:
         return False
-
-    if not article.seo_title or len(article.seo_title) < 40:
-        return True
 
     return True
 
 
 def generate_ctr_optimized_seo(article: Article) -> dict:
     """
-    Generate better SEO title & meta description
+    Generate better SEO title & meta description using AI
     """
+
     prompt = f"""
-    Improve the SEO title and meta description for higher click-through rate.
+You are a senior SEO strategist.
 
-    Rules:
-    - Title max 60 characters
-    - Meta description max 155 characters
-    - Professional, curiosity-driven
-    - No clickbait
-    - Topic: {article.title}
+TASK:
+Improve click-through rate for the following article.
 
-    Content:
-    {article.canonical_content[:1500]}
-    """
+STRICT RULES:
+- Output ONLY valid JSON
+- No explanations
+- No markdown
+- No emojis
+- Professional tone (no clickbait)
 
-    result = generate_canonical_article(prompt)
+PROCESS:
+1. Extract top 3 SEO keywords from the content
+2. Generate 3 SEO title variations (max 60 chars)
+3. Pick the BEST title (curiosity-driven, professional)
+4. Generate meta description (max 155 chars)
 
-    return {
-        "seo_title": result.get("seo_title", article.seo_title),
-        "meta_description": result.get(
-            "meta_description",
-            article.meta_description
-        )
-    }
+JSON FORMAT:
+{{
+  "seo_title": "...",
+  "meta_description": "...",
+  "keywords": ["keyword1", "keyword2", "keyword3"]
+}}
+
+Article Title:
+{article.title}
+
+Article Content:
+{article.canonical_content[:1500]}
+"""
+
+    raw = generate_canonical_article(
+        master_prompt="",
+        user_topic=prompt
+    )
+
+    try:
+        import json
+        data = json.loads(raw)
+        return {
+            "seo_title": data.get("seo_title", article.seo_title),
+            "meta_description": data.get("meta_description", article.meta_description)
+        }
+    except Exception:
+        # Safe fallback (never crash)
+        return {
+            "seo_title": article.seo_title,
+            "meta_description": article.meta_description
+        }
 
 
 def optimize_article_ctr(db: Session, article_id: int) -> bool:
     """
     Main CTR optimization pipeline
     """
+
     article = db.query(Article).filter(Article.id == article_id).first()
     if not article:
         return False
