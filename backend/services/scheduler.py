@@ -9,6 +9,7 @@ from backend.services.prompt_loader import load_master_prompt
 from backend.services.agentic_brain import generate_canonical_article
 from backend.services.publishers.blogger import BloggerPublisher
 from backend.services.scheduler_state import AUTO_PUBLISH_ENABLED
+from backend.services.ctr_scheduler import run_ctr_optimization
 
 
 # =========================
@@ -83,7 +84,7 @@ def daily_auto_publish():
         logger.info(f"Published URL: {result.get('url')}")
 
     except Exception:
-        logger.exception("Scheduler execution error")
+        logger.exception("Auto publish job failed")
 
     finally:
         db.close()
@@ -92,11 +93,13 @@ def daily_auto_publish():
 def start_scheduler():
     """
     Starts background scheduler.
-    Auto-publish runs daily at 9:00 AM.
+    - Auto publish: 09:00 AM
+    - CTR optimization: 02:00 AM
     """
 
     scheduler = BackgroundScheduler()
 
+    # 🔹 Daily auto publish (09:00 AM)
     scheduler.add_job(
         daily_auto_publish,
         trigger="cron",
@@ -106,5 +109,17 @@ def start_scheduler():
         replace_existing=True
     )
 
+    # 🔹 Daily CTR optimization (02:00 AM)
+    scheduler.add_job(
+        run_ctr_optimization,
+        trigger="cron",
+        hour=2,
+        minute=0,
+        id="daily_ctr_optimization_job",
+        replace_existing=True
+    )
+
     scheduler.start()
-    logger.info("Scheduler started. Daily auto publish job registered.")
+    logger.info(
+        "Scheduler started. Auto publish + CTR optimization jobs registered."
+    )
