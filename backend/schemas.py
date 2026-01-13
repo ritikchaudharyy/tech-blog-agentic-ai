@@ -4,11 +4,22 @@ from datetime import datetime
 
 
 # =========================
-# EXISTING SCHEMA
+# DRAFT / GENERATION
 # =========================
 class GenerateDraftRequest(BaseModel):
     topic: str
     platform: str = "blogger"
+
+
+# =========================
+# ADMIN UPDATE (PHASE 4.3)
+# =========================
+class ArticleUpdateRequest(BaseModel):
+    """
+    Used for manual admin edits
+    """
+    title: Optional[str] = None
+    canonical_content: Optional[str] = None
 
 
 # =========================
@@ -18,16 +29,17 @@ class GenerateDraftRequest(BaseModel):
 class ArticleBase(BaseModel):
     id: int
     title: str
+
     # Mapped from meta_description for frontend compatibility
     summary: Optional[str] = Field(None, alias="meta_description")
-    
-    # DB fields
+
+    # Core DB fields
     view_count: int
     status: str
     created_at: datetime
     platform_target: str
-    
-    # Computed or default for now (since not in DB)
+
+    # Admin / UI derived
     verified: bool = False
 
     class Config:
@@ -38,8 +50,8 @@ class ArticleBase(BaseModel):
 class ArticleListOut(ArticleBase):
     """
     Used for:
+    - Admin content table
     - Trending articles
-    - Article listings
     - Search results
     """
     pass
@@ -49,7 +61,17 @@ class ArticleDetailOut(ArticleBase):
     """
     Used for:
     - Single article page
+    - Admin preview
     """
+
     # Mapped from canonical_content
     content: Optional[str] = Field(None, alias="canonical_content")
 
+    # SEO (optional but future-safe)
+    seo_title: Optional[str] = None
+    meta_description: Optional[str] = None
+    seo_tags: Optional[str] = None
+
+    # Intelligence
+    rewrite_count: Optional[int] = 0
+    last_optimized_at: Optional[datetime] = None
