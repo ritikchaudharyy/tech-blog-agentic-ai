@@ -13,7 +13,7 @@ sqlalchemy
 apscheduler
 
 # AI / Gemini
-google-genai
+google-generativeai
 
 # Google APIs (Blogger publishing)
 google-api-python-client
