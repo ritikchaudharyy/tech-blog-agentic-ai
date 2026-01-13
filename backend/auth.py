@@ -7,7 +7,9 @@ if not OWNER_API_KEY:
     raise RuntimeError("OWNER_API_KEY is not set in environment variables")
 
 
-def verify_owner(x_api_key: str | None = Header(default=None, alias="x-api-key")):
+def verify_owner(
+    x_api_key: str | None = Header(default=None, alias="x-api-key")
+):
     """
     Owner authentication dependency.
     Requires header: x-api-key
@@ -26,3 +28,18 @@ def verify_owner(x_api_key: str | None = Header(default=None, alias="x-api-key")
         )
 
     return True
+
+
+def resolve_role(email: str, api_key: str | None):
+    """
+    Determines user role based on email + API key
+    """
+    if email == "admin@example.com":
+        if api_key != OWNER_API_KEY:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Invalid owner API key"
+            )
+        return "admin"
+
+    return "user"
