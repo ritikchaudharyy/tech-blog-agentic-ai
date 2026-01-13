@@ -29,6 +29,7 @@ from backend import models
 # =========================
 from backend.routes.public import router as public_router
 from backend.routes.owner import router as owner_router
+from backend.routes.auth import router as auth_router
 
 # =========================
 # SERVICES
@@ -50,12 +51,12 @@ app = FastAPI(
 )
 
 # =========================
-# CORS CONFIG (Frontend Ready)
+# CORS CONFIG
 # =========================
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",  # Vite / React
+        "http://localhost:5173",
         "http://127.0.0.1:5173"
     ],
     allow_credentials=True,
@@ -68,6 +69,7 @@ app.add_middleware(
 # =========================
 app.include_router(public_router)
 app.include_router(owner_router)
+app.include_router(auth_router)
 
 # =========================
 # STARTUP EVENT
@@ -87,5 +89,5 @@ def startup_event():
 def root():
     return {
         "status": "Backend is running",
-        "message": "Public + Owner routes active"
+        "message": "Public + Owner + Auth routes active"
     }
