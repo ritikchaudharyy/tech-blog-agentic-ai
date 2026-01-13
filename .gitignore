@@ -45,3 +45,4 @@ dist/
 
 # Generated outputs
 output/
+node_modules
