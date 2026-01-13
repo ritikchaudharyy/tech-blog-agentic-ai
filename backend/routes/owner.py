@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import datetime
 
 from backend.database import SessionLocal
 from backend.models import Article
@@ -38,31 +39,78 @@ def get_db():
         db.close()
 
 # =====================================================
-# ADMIN DASHBOARD APIs (FRONTEND REQUIRED)
+# ADMIN DASHBOARD APIs
 # =====================================================
 
 @router.get("/metrics")
 def admin_metrics(db: Session = Depends(get_db)):
-    """
-    Used by AdminDashboard.jsx
-    """
     return get_overview_stats(db)
 
 
 @router.get("/traffic")
 def admin_traffic(db: Session = Depends(get_db)):
-    """
-    Used by AdminDashboard.jsx (charts)
-    """
     return get_trending_memory_stats(db)
 
 
 @router.get("/articles", response_model=List[ArticleListOut])
 def admin_articles(db: Session = Depends(get_db)):
+    return db.query(Article).order_by(Article.created_at.desc()).all()
+
+# =====================================================
+# ADMIN ARTICLE ACTIONS (PHASE 4.2)
+# =====================================================
+
+@router.post("/articles/{article_id}/publish")
+def publish_article(article_id: int, db: Session = Depends(get_db)):
     """
+    Manually publish an approved/draft article
     Used by AdminContent.jsx
     """
-    return db.query(Article).all()
+    article = db.query(Article).filter(Article.id == article_id).first()
+
+    if not article:
+        raise HTTPException(status_code=404, detail="Article not found")
+
+    if article.status == "published":
+        return {
+            "message": "Article already published",
+            "published_at": article.published_at
+        }
+
+    publisher = BloggerPublisher()
+    result = publisher.publish(article)
+
+    article.status = "published"
+    article.published_at = datetime.utcnow()
+
+    db.commit()
+    db.refresh(article)
+
+    return {
+        "message": "Article published successfully",
+        "url": result.get("url"),
+        "published_at": article.published_at
+    }
+
+
+@router.delete("/articles/{article_id}")
+def delete_article(article_id: int, db: Session = Depends(get_db)):
+    """
+    Permanently delete an article
+    Used by AdminContent.jsx
+    """
+    article = db.query(Article).filter(Article.id == article_id).first()
+
+    if not article:
+        raise HTTPException(status_code=404, detail="Article not found")
+
+    db.delete(article)
+    db.commit()
+
+    return {
+        "message": "Article deleted successfully",
+        "article_id": article_id
+    }
 
 # =====================================================
 # AUTO PUBLISH (MANUAL)
@@ -104,6 +152,7 @@ def auto_publish(payload: GenerateDraftRequest, db: Session = Depends(get_db)):
     result = publisher.publish(article)
 
     article.status = "published"
+    article.published_at = datetime.utcnow()
     db.commit()
 
     record_trend_usage(db, payload.topic)
@@ -154,6 +203,7 @@ def auto_publish_trending(region: str = "global", db: Session = Depends(get_db))
     result = publisher.publish(article)
 
     article.status = "published"
+    article.published_at = datetime.utcnow()
     db.commit()
 
     record_trend_usage(db, topic)
