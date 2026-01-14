@@ -1,0 +1,788 @@
+/* =========================================================
+   FONT IMPORTS
+   ========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* =========================================================
+   TAILWIND DIRECTIVES
+   ========================================================= */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   RESET
+   ========================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+/* =========================================================
+   DESIGN TOKENS — LIGHT MODE
+   ========================================================= */
+html {
+  --brand: #2563eb;
+
+  --bg-main: #f8fafc;
+  --bg-elevated: #ffffff;
+
+  --glass-bg: rgba(255,255,255,0.85);
+  --glass-border: rgba(255,255,255,0.55);
+
+  --text-main: #0f172a;
+  --text-sub: #475569;
+  --text-muted: #94a3b8;
+
+  --border-soft: rgba(15,23,42,0.08);
+
+  /* Elevation system */
+  --shadow-xs: 0 1px 2px rgba(15,23,42,0.04);
+  --shadow-sm: 0 4px 12px rgba(15,23,42,0.06);
+  --shadow-md: 0 12px 30px rgba(15,23,42,0.12);
+  --shadow-lg: 0 35px 80px rgba(15,23,42,0.2);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* 🎨 Layer-1: Particle colors */
+  --particle-color: rgba(37, 99, 235, 0.15);
+  --particle-connection: rgba(37, 99, 235, 0.2);
+
+  /* 🎨 Layer-1: Status colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+}
+
+/* =========================================================
+   DARK MODE TOKENS (MANUAL .dark)
+   ========================================================= */
+html.dark {
+  --bg-main: #020617;
+  --bg-elevated: #020617;
+
+  --glass-bg: rgba(15,23,42,0.78);
+  --glass-border: rgba(255,255,255,0.08);
+
+  --text-main: #e5e7eb;
+  --text-sub: #94a3b8;
+  --text-muted: #64748b;
+
+  --border-soft: rgba(255,255,255,0.08);
+
+  --shadow-xs: 0 2px 6px rgba(0,0,0,0.4);
+  --shadow-sm: 0 6px 20px rgba(0,0,0,0.55);
+  --shadow-md: 0 16px 45px rgba(0,0,0,0.65);
+  --shadow-lg: 0 40px 90px rgba(0,0,0,0.85);
+
+  /* 🎨 Layer-1: Dark mode particle colors */
+  --particle-color: rgba(99, 102, 241, 0.25);
+  --particle-connection: rgba(99, 102, 241, 0.3);
+
+  /* 🎨 Layer-1: Dark mode status colors */
+  --success: #34d399;
+  --warning: #fbbf24;
+  --error: #f87171;
+}
+
+/* =========================================================
+   BODY
+   ========================================================= */
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, sans-serif;
+  background:
+    radial-gradient(circle at top right, rgba(59,130,246,0.14), transparent 60%),
+    radial-gradient(circle at bottom left, rgba(99,102,241,0.14), transparent 60%),
+    var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background 300ms var(--ease-out), color 300ms var(--ease-out);
+}
+
+html.dark body {
+  background:
+    radial-gradient(circle at top right, rgba(37,99,235,0.25), transparent 60%),
+    radial-gradient(circle at bottom left, rgba(79,70,229,0.25), transparent 60%),
+    var(--bg-main);
+}
+
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+p {
+  color: var(--text-sub);
+}
+
+/* =========================================================
+   GLASS / CARDS — MOTION AWARE
+   ========================================================= */
+.glass {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+  border-radius: 18px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transition:
+    box-shadow 300ms var(--ease-out),
+    transform 300ms var(--ease-out);
+}
+
+.glass:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card {
+  background: var(--bg-elevated);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-soft);
+  transition:
+    box-shadow 250ms var(--ease-out),
+    transform 250ms var(--ease-out);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+/* =========================================================
+   SIDEBAR / HEADER MICRO-MOTION
+   ========================================================= */
+.sidebar {
+  box-shadow: inset -1px 0 0 var(--border-soft), var(--shadow-sm);
+}
+
+header {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow 200ms var(--ease-out);
+}
+
+/* =========================================================
+   INPUTS — FOCUS MOTION
+   ========================================================= */
+.input {
+  width: 100%;
+  padding: 0.75rem 0.95rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: var(--glass-bg);
+  color: var(--text-main);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.35);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   BUTTONS — PRESS PHYSICS
+   ========================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-radius: 10px;
+  transition:
+    transform 120ms var(--ease-out),
+    box-shadow 120ms var(--ease-out);
+}
+
+.btn-primary {
+  background: linear-gradient(to right, #2563eb, #3b82f6);
+  color: white;
+  box-shadow: 0 16px 40px rgba(37,99,235,0.45);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+  box-shadow: 0 8px 20px rgba(37,99,235,0.35);
+}
+
+/* =========================================================
+   PAGE TRANSITIONS
+   ========================================================= */
+.animate-page {
+  animation: pageEnter 420ms var(--ease-out);
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
+   FADE IN
+   ========================================================= */
+.animate-fade-in {
+  animation: fadeIn 420ms var(--ease-out);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   🎬 ROUTE TRANSITIONS (ENTER / EXIT)
+   ========================================================= */
+.route-enter {
+  animation: routeFadeIn 320ms var(--ease-out) both;
+}
+
+.route-exit {
+  animation: routeFadeOut 220ms ease-in both;
+}
+
+@keyframes routeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes routeFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   🌓 LAYER-1: THEME TOGGLE BUTTON
+   ============================================ */
+.theme-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 300ms var(--ease-out);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: var(--brand);
+  color: white;
+}
+
+.theme-toggle svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: transform 300ms var(--ease-out);
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(20deg);
+}
+
+/* ============================================
+   🎥 LAYER-1: PARTICLE BACKGROUND
+   ============================================ */
+.particle-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeInParticles 1s ease-in-out forwards;
+}
+
+@keyframes fadeInParticles {
+  to {
+    opacity: 1;
+  }
+}
+
+.particle-background canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================
+   🔐 LAYER-1: LOGIN PAGE
+   ============================================ */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  position: relative;
+}
+
+.login-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: 1;
+  animation: loginCardEnter 420ms var(--ease-out);
+}
+
+@keyframes loginCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-main);
+}
+
+.login-header p {
+  color: var(--text-sub);
+  font-size: 0.875rem;
+}
+
+/* ============================================
+   🔐 LAYER-1: OAUTH BUTTONS
+   ============================================ */
+.oauth-section {
+  margin-bottom: 1.5rem;
+}
+
+.oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--text-main);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 200ms var(--ease-out);
+  box-shadow: var(--shadow-xs);
+}
+
+.oauth-btn:hover {
+  background: var(--bg-elevated);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--brand);
+}
+
+.oauth-btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.oauth-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.oauth-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   🔐 LAYER-1: DIVIDER
+   ============================================ */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.divider:not(:empty)::before {
+  margin-right: 0.75rem;
+}
+
+.divider:not(:empty)::after {
+  margin-left: 0.75rem;
+}
+
+/* ============================================
+   🔐 LAYER-1: LOGIN FORM
+   ============================================ */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.form-group input {
+  padding: 0.75rem 0.95rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--text-main);
+  font-size: 0.875rem;
+  transition: all 200ms var(--ease-out);
+}
+
+.form-group input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
+.login-btn {
+  padding: 0.75rem;
+  background: linear-gradient(to right, #2563eb, #3b82f6);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms var(--ease-out);
+  margin-top: 0.5rem;
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.45);
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 50px rgba(37, 99, 235, 0.55);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================
+   📢 LAYER-1: TOAST NOTIFICATIONS
+   ============================================ */
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 420px;
+}
+
+.toast {
+  background: var(--glass-bg);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: start;
+  gap: 0.75rem;
+  animation: slideInRight 300ms var(--ease-out);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.toast.success {
+  border-left: 4px solid var(--success);
+}
+
+.toast.error {
+  border-left: 4px solid var(--error);
+}
+
+.toast.info {
+  border-left: 4px solid var(--brand);
+}
+
+/* ============================================
+   🧠 LAYER-1: AI ONBOARDING MODAL
+   ============================================ */
+.onboarding-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  animation: fadeInOverlay 300ms var(--ease-out);
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.onboarding-modal {
+  background: var(--glass-bg);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+  animation: slideUpModal 400ms var(--ease-out);
+}
+
+@keyframes slideUpModal {
+  from {
+    transform: translateY(30px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.onboarding-modal h2 {
+  margin-bottom: 1rem;
+  color: var(--text-main);
+  font-size: 1.5rem;
+}
+
+.onboarding-modal p {
+  color: var(--text-sub);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.onboarding-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.onboarding-actions button {
+  padding: 0.625rem 1.25rem;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms var(--ease-out);
+}
+
+.onboarding-actions button.primary {
+  background: linear-gradient(to right, #2563eb, #3b82f6);
+  color: white;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+}
+
+.onboarding-actions button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.45);
+}
+
+.onboarding-actions button.primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.onboarding-actions button.secondary {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--text-main);
+  border: 1px solid var(--border-soft);
+}
+
+.onboarding-actions button.secondary:hover {
+  background: var(--bg-elevated);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.onboarding-actions button.secondary:active {
+  transform: translateY(0);
+}
+
+/* ============================================
+   📱 LAYER-1: RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 640px) {
+  .theme-toggle {
+    top: 1rem;
+    right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .theme-toggle svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .login-card {
+    padding: 1.5rem;
+  }
+
+  .login-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .toast-container {
+    top: 4rem;
+    right: 0.5rem;
+    left: 0.5rem;
+    max-width: none;
+  }
+
+  .onboarding-modal {
+    padding: 1.5rem;
+  }
+
+  .onboarding-modal h2 {
+    font-size: 1.25rem;
+  }
+}
