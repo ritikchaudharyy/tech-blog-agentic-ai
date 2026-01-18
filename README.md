@@ -4,7 +4,7 @@
 Tech Blog Agentic AI is a **disciplined automation system** for generating and publishing professional tech blogs using an **agentic AI architecture**.  
 The platform is designed with **real-world editorial and SEO safety** in mind — not just content generation.
 
------------------------------------------
+---------------------------------------------
 
 ## 🎯 Project Vision
 
@@ -17,7 +17,7 @@ The goal of this project is to build a **production-grade blogging pipeline** th
 
 This system mirrors how **mature content teams** operate in real products.
 
-------------------------------------------
+---------------------------------------------
 
 ### 🔑 Core Architecture Principle
 
