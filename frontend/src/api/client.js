@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 /**
  * Simple auth helper
@@ -25,7 +25,14 @@ function dispatchToast(type, message) {
 async function handleResponse(res) {
   if (!res.ok) {
     const text = await res.text();
-    const errorMessage = text || 'Request failed';
+    let errorMessage = 'Request failed';
+    
+    try {
+      const errorData = JSON.parse(text);
+      errorMessage = errorData.detail || errorData.message || text || errorMessage;
+    } catch {
+      errorMessage = text || errorMessage;
+    }
 
     // Global error toast
     dispatchToast('error', errorMessage);
@@ -51,7 +58,9 @@ async function request(method, path, body) {
     return data;
   } catch (err) {
     // Network / unexpected error
-    dispatchToast('error', err.message || 'Network error');
+    if (!err.message.includes('Request failed')) {
+      dispatchToast('error', err.message || 'Network error');
+    }
     throw err;
   }
 }
@@ -59,4 +68,7 @@ async function request(method, path, body) {
 export const apiClient = {
   get: (path) => request('GET', path),
   post: (path, body) => request('POST', path, body),
+  put: (path, body) => request('PUT', path, body),
+  patch: (path, body) => request('PATCH', path, body),
+  delete: (path) => request('DELETE', path),
 };

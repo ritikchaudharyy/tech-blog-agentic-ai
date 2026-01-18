@@ -4,7 +4,7 @@ from googleapiclient.discovery import build
 import os
 from datetime import datetime
 
-from backend.services.publishers.base import BasePublisher
+from services.publishers.base import BasePublisher
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))

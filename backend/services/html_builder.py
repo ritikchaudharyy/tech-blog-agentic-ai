@@ -1,4 +1,4 @@
-from backend.services.related_block import build_related_posts_html
+from services.related_block import build_related_posts_html
 import re
 import hashlib
 

@@ -1,13 +1,17 @@
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
+import logging
+import json
 
-from backend.models import Article
-from backend.services.agentic_brain import generate_canonical_article
+from models import Article
+from services.agentic_brain import generate_canonical_article
+
+logger = logging.getLogger(__name__)
 
 # =========================
 # CONFIG
 # =========================
-WEAK_VIEW_THRESHOLD = 50          # proxy CTR signal
+WEAK_VIEW_THRESHOLD = 50
 MAX_REWRITE_LIMIT = 2
 GRACE_PERIOD_HOURS = 24
 
@@ -17,21 +21,17 @@ def is_ctr_weak(article: Article) -> bool:
     Decide whether article is eligible for CTR optimization
     """
 
-    # 1️⃣ Must be published
     if article.status != "published" or not article.published_at:
         return False
 
-    # 2️⃣ Grace period check
     age = datetime.utcnow() - article.published_at
     if age < timedelta(hours=GRACE_PERIOD_HOURS):
         return False
 
-    # 3️⃣ View threshold
-    if article.view_count >= WEAK_VIEW_THRESHOLD:
+    if article.view_count is not None and article.view_count >= WEAK_VIEW_THRESHOLD:
         return False
 
-    # 4️⃣ Rewrite limit
-    if article.rewrite_count >= MAX_REWRITE_LIMIT:
+    if article.rewrite_count is not None and article.rewrite_count >= MAX_REWRITE_LIMIT:
         return False
 
     return True
@@ -40,7 +40,7 @@ def is_ctr_weak(article: Article) -> bool:
 def generate_ctr_optimized_seo(article: Article) -> dict:
     """
     Generates improved SEO title & meta description
-    using smarter CTR prompt
+    using AI-based CTR optimization
     """
 
     prompt = f"""
@@ -74,13 +74,12 @@ Article Content:
 {article.canonical_content[:1500]}
 """
 
-    raw = generate_canonical_article(
-        master_prompt=prompt,
-        user_topic=""
-    )
-
     try:
-        import json
+        raw = generate_canonical_article(
+            master_prompt=prompt,
+            user_topic=""
+        )
+
         data = json.loads(raw)
 
         return {
@@ -91,8 +90,10 @@ Article Content:
             )
         }
 
-    except Exception:
-        # fallback safety
+    except Exception as e:
+        logger.exception(
+            f"SEO generation failed for article ID {article.id}: {e}"
+        )
         return {
             "seo_title": article.seo_title,
             "meta_description": article.meta_description
@@ -104,18 +105,30 @@ def optimize_article_ctr(db: Session, article_id: int) -> bool:
     Full CTR optimization pipeline
     """
 
-    article = db.query(Article).filter(Article.id == article_id).first()
-    if not article:
+    try:
+        article = db.query(Article).filter(Article.id == article_id).first()
+        if not article:
+            logger.warning(f"Article not found: ID {article_id}")
+            return False
+
+        if not is_ctr_weak(article):
+            logger.info(f"CTR optimization skipped for article ID {article.id}")
+            return False
+
+        seo_data = generate_ctr_optimized_seo(article)
+
+        article.seo_title = seo_data["seo_title"]
+        article.meta_description = seo_data["meta_description"]
+        article.rewrite_count = (article.rewrite_count or 0) + 1
+
+        db.commit()
+
+        logger.info(f"CTR optimized successfully for article ID {article.id}")
+        return True
+
+    except Exception as e:
+        db.rollback()
+        logger.exception(
+            f"CTR optimization transaction failed for article ID {article_id}: {e}"
+        )
         return False
-
-    if not is_ctr_weak(article):
-        return False
-
-    seo_data = generate_ctr_optimized_seo(article)
-
-    article.seo_title = seo_data["seo_title"]
-    article.meta_description = seo_data["meta_description"]
-    article.rewrite_count += 1
-
-    db.commit()
-    return True

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from backend.models import Article
+from models import Article
 
 
 def generate_weekly_newsletter(db: Session):

@@ -1,7 +1,10 @@
 import os
-from fastapi import Header, HTTPException, status
+from fastapi import APIRouter, Header, HTTPException, status
+
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 OWNER_API_KEY = os.getenv("OWNER_API_KEY")
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@example.com")
 
 if not OWNER_API_KEY:
     raise RuntimeError("OWNER_API_KEY is not set in environment variables")
@@ -10,11 +13,6 @@ if not OWNER_API_KEY:
 def verify_owner(
     x_api_key: str | None = Header(default=None, alias="x-api-key")
 ):
-    """
-    Owner authentication dependency.
-    Requires header: x-api-key
-    """
-
     if x_api_key is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -31,10 +29,7 @@ def verify_owner(
 
 
 def resolve_role(email: str, api_key: str | None):
-    """
-    Determines user role based on email + API key
-    """
-    if email == "admin@example.com":
+    if email == ADMIN_EMAIL:
         if api_key != OWNER_API_KEY:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -43,3 +38,11 @@ def resolve_role(email: str, api_key: str | None):
         return "admin"
 
     return "user"
+
+
+@router.post("/login")
+def login(payload: dict):
+    return {
+        "message": "Login endpoint reached",
+        "payload": payload
+    }

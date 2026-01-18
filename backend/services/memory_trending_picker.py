@@ -1,4 +1,4 @@
-from backend.services.trending_agent import get_trending_topics
+from services.trending_agent import get_trending_topics
 
 
 def pick_memory_safe_trending_topic(db, region: str = "global"):

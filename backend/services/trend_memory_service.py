@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 
-from backend.models_trend_memory import TrendMemory
+from models_trend_memory import TrendMemory
 
 
 COOLDOWN_DAYS = 14

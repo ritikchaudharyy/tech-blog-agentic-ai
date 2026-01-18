@@ -1,6 +1,8 @@
+const ADMIN_EMAIL = 'arvik3cr@gmail.com';
+
 export const auth = {
   isAuthenticated: false,
-  role: null, // 'user' | 'admin'
+  role: null,
   apiKey: null,
 
   initialize() {
@@ -15,7 +17,7 @@ export const auth = {
 
   login(email, apiKey = null) {
     this.isAuthenticated = true;
-    this.role = email === 'admin@example.com' ? 'admin' : 'user';
+    this.role = email === ADMIN_EMAIL ? 'admin' : 'user';
     this.apiKey = apiKey;
 
     localStorage.setItem(
@@ -33,8 +35,9 @@ export const auth = {
     this.role = null;
     this.apiKey = null;
     localStorage.removeItem('auth_session');
+    localStorage.removeItem('API_KEY');
+    localStorage.removeItem('USER_ROLE');
   },
 };
 
-// Auto-initialize on load
 auth.initialize();

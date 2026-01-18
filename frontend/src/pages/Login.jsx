@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Key, Lock, ShieldCheck } from 'lucide-react';
 import { apiClient } from '../api/client';
+import { auth } from '../auth/auth';
 import ThemeToggle from '../components/ThemeToggle';
+
+const ADMIN_EMAIL = 'arvik3cr@gmail.com';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +14,7 @@ const Login = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
-  const isAdmin = email === 'admin@example.com';
+  const isAdmin = email === ADMIN_EMAIL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,15 +29,34 @@ const Login = () => {
 
     try {
       setIsLoggingIn(true);
-      const res = await apiClient.post('/api/auth/login', {
-        email,
-        api_key: isAdmin ? apiKey : null,
+
+      const payload = { email };
+      if (isAdmin) {
+        payload.api_key = apiKey;
+      }
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(isAdmin && apiKey ? { 'X-API-Key': apiKey } : {}),
+        },
+        body: JSON.stringify(payload),
       });
 
-      if (res.api_key) localStorage.setItem('API_KEY', res.api_key);
-      localStorage.setItem('USER_ROLE', res.role || 'user');
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.detail || 'Authentication failed');
+      }
 
-      navigate(res.role === 'admin' ? '/admin' : '/app');
+      const data = await res.json();
+
+      auth.login(email, data.api_key);
+
+      if (data.api_key) localStorage.setItem('API_KEY', data.api_key);
+      localStorage.setItem('USER_ROLE', data.role || 'user');
+
+      navigate(data.role === 'admin' ? '/admin' : '/app');
     } catch (err) {
       setError(err.message || 'Authentication failed');
     } finally {
@@ -44,12 +66,10 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Theme toggle */}
       <div className="absolute top-6 right-6 z-20">
         <ThemeToggle />
       </div>
 
-      {/* Card */}
       <div className="relative w-full max-w-md px-4">
         <div className="glass p-8 animate-fade-in">
           <h1 className="mb-2">Welcome Back</h1>
@@ -89,7 +109,7 @@ const Login = () => {
                   <input
                     type="password"
                     required
-                    placeholder="sk_..."
+                    placeholder="Enter your owner API key"
                     className="input pl-10"
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}

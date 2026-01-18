@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from backend.models import Article
+from models import Article
 from datetime import datetime
 
 

@@ -1,5 +1,5 @@
 import json
-from backend.services.agentic_brain import generate_canonical_article
+from services.agentic_brain import generate_canonical_article
 
 
 def generate_seo(article_title: str, article_content: str):

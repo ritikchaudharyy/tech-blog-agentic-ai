@@ -1,4 +1,4 @@
-from backend.services.publishers.base import BasePublisher
+from services.publishers.base import BasePublisher
 
 
 class WordPressPublisher(BasePublisher):

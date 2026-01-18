@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Edit, MoreHorizontal, FileText, CheckCircle, Clock, Trash2 } from 'lucide-react';
 import AdminLayout from '../layouts/AdminLayout';
 import { apiClient } from '../api/client';
@@ -8,21 +8,22 @@ const AdminContent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchArticles = async () => {
+  const fetchArticles = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const res = await apiClient.get('/api/admin/articles');
-      setArticles(res || []);
+      setArticles(Array.isArray(res) ? res : []);
     } catch (err) {
       setError(err.message || 'Failed to load articles');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchArticles();
-  }, []);
+  }, [fetchArticles]);
 
   const handlePublish = async (id) => {
     try {
@@ -34,11 +35,13 @@ const AdminContent = () => {
   };
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this article?');
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this article?'
+    );
     if (!confirmDelete) return;
 
     try {
-      await apiClient.post(`/api/admin/articles/${id}/delete`);
+      await apiClient.delete(`/api/admin/articles/${id}`);
       fetchArticles();
     } catch (err) {
       alert(err.message || 'Failed to delete article');
@@ -91,7 +94,7 @@ const AdminContent = () => {
                   {articles.length === 0 && (
                     <tr>
                       <td
-                        colSpan="5"
+                        colSpan={5}
                         className="px-6 py-6 text-center text-gray-400"
                       >
                         No articles found
@@ -122,7 +125,7 @@ const AdminContent = () => {
                                 ? 'bg-green-500'
                                 : 'bg-gray-400'
                             }`}
-                          ></span>
+                          />
                           {article.status}
                         </span>
                       </td>

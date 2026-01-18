@@ -1,7 +1,7 @@
 /* =========================================================
    FONT IMPORTS
    ========================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 /* =========================================================
    TAILWIND DIRECTIVES
@@ -11,257 +11,270 @@
 @tailwind utilities;
 
 /* =========================================================
-   RESET
-   ========================================================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
-
-/* =========================================================
    DESIGN TOKENS — LIGHT MODE
    ========================================================= */
-html {
+:root {
+  /* Brand */
   --brand: #2563eb;
+  --brand-dark: #1e40af;
+  --brand-light: #3b82f6;
 
+  /* Backgrounds */
   --bg-main: #f8fafc;
   --bg-elevated: #ffffff;
+  --bg-subtle: #f1f5f9;
 
-  --glass-bg: rgba(255,255,255,0.85);
-  --glass-border: rgba(255,255,255,0.55);
+  /* Glass effects */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.55);
 
+  /* Text */
   --text-main: #0f172a;
   --text-sub: #475569;
   --text-muted: #94a3b8;
 
-  --border-soft: rgba(15,23,42,0.08);
+  /* Borders */
+  --border-soft: rgba(15, 23, 42, 0.08);
+  --border-medium: rgba(15, 23, 42, 0.12);
 
-  /* Elevation system */
-  --shadow-xs: 0 1px 2px rgba(15,23,42,0.04);
-  --shadow-sm: 0 4px 12px rgba(15,23,42,0.06);
-  --shadow-md: 0 12px 30px rgba(15,23,42,0.12);
-  --shadow-lg: 0 35px 80px rgba(15,23,42,0.2);
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 12px 30px rgba(15, 23, 42, 0.12);
+  --shadow-lg: 0 35px 80px rgba(15, 23, 42, 0.2);
+  --shadow-xl: 0 50px 100px rgba(15, 23, 42, 0.25);
 
   /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* 🎨 Layer-1: Particle colors */
+  /* Status colors */
+  --success: #10b981;
+  --success-light: #34d399;
+  --warning: #f59e0b;
+  --warning-light: #fbbf24;
+  --error: #ef4444;
+  --error-light: #f87171;
+  --info: #3b82f6;
+  --info-light: #60a5fa;
+
+  /* Particles */
   --particle-color: rgba(37, 99, 235, 0.15);
   --particle-connection: rgba(37, 99, 235, 0.2);
-
-  /* 🎨 Layer-1: Status colors */
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
 }
 
 /* =========================================================
-   DARK MODE TOKENS (MANUAL .dark)
+   DARK MODE TOKENS
    ========================================================= */
 html.dark {
+  /* Backgrounds */
   --bg-main: #020617;
-  --bg-elevated: #020617;
+  --bg-elevated: #0f172a;
+  --bg-subtle: #1e293b;
 
-  --glass-bg: rgba(15,23,42,0.78);
-  --glass-border: rgba(255,255,255,0.08);
+  /* Glass effects */
+  --glass-bg: rgba(15, 23, 42, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.08);
 
-  --text-main: #e5e7eb;
-  --text-sub: #94a3b8;
+  /* Text */
+  --text-main: #f1f5f9;
+  --text-sub: #cbd5e1;
   --text-muted: #64748b;
 
-  --border-soft: rgba(255,255,255,0.08);
+  /* Borders */
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.12);
 
-  --shadow-xs: 0 2px 6px rgba(0,0,0,0.4);
-  --shadow-sm: 0 6px 20px rgba(0,0,0,0.55);
-  --shadow-md: 0 16px 45px rgba(0,0,0,0.65);
-  --shadow-lg: 0 40px 90px rgba(0,0,0,0.85);
+  /* Shadows */
+  --shadow-xs: 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 6px 20px rgba(0, 0, 0, 0.55);
+  --shadow-md: 0 16px 45px rgba(0, 0, 0, 0.65);
+  --shadow-lg: 0 40px 90px rgba(0, 0, 0, 0.85);
+  --shadow-xl: 0 60px 120px rgba(0, 0, 0, 0.95);
 
-  /* 🎨 Layer-1: Dark mode particle colors */
-  --particle-color: rgba(99, 102, 241, 0.25);
-  --particle-connection: rgba(99, 102, 241, 0.3);
-
-  /* 🎨 Layer-1: Dark mode status colors */
+  /* Status colors (adjusted for dark mode) */
   --success: #34d399;
   --warning: #fbbf24;
   --error: #f87171;
+  --info: #60a5fa;
+
+  /* Particles */
+  --particle-color: rgba(99, 102, 241, 0.25);
+  --particle-connection: rgba(99, 102, 241, 0.3);
 }
 
 /* =========================================================
-   BODY
+   BASE STYLES
    ========================================================= */
-body {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, sans-serif;
-  background:
-    radial-gradient(circle at top right, rgba(59,130,246,0.14), transparent 60%),
-    radial-gradient(circle at bottom left, rgba(99,102,241,0.14), transparent 60%),
-    var(--bg-main);
-  color: var(--text-main);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  transition: background 300ms var(--ease-out), color 300ms var(--ease-out);
-}
-
-html.dark body {
-  background:
-    radial-gradient(circle at top right, rgba(37,99,235,0.25), transparent 60%),
-    radial-gradient(circle at bottom left, rgba(79,70,229,0.25), transparent 60%),
-    var(--bg-main);
-}
-
-/* =========================================================
-   TYPOGRAPHY
-   ========================================================= */
-h1 {
-  font-size: 2.25rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  margin: 0;
-}
-
-p {
-  color: var(--text-sub);
-}
-
-/* =========================================================
-   GLASS / CARDS — MOTION AWARE
-   ========================================================= */
-.glass {
-  position: relative;
-  background: var(--glass-bg);
-  backdrop-filter: blur(26px);
-  -webkit-backdrop-filter: blur(26px);
-  border-radius: 18px;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-  transition:
-    box-shadow 300ms var(--ease-out),
-    transform 300ms var(--ease-out);
-}
-
-.glass:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-.card {
-  background: var(--bg-elevated);
-  border-radius: 16px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-soft);
-  transition:
-    box-shadow 250ms var(--ease-out),
-    transform 250ms var(--ease-out);
-}
-
-.card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-3px);
-}
-
-/* =========================================================
-   SIDEBAR / HEADER MICRO-MOTION
-   ========================================================= */
-.sidebar {
-  box-shadow: inset -1px 0 0 var(--border-soft), var(--shadow-sm);
-}
-
-header {
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: var(--shadow-xs);
-  transition: box-shadow 200ms var(--ease-out);
-}
-
-/* =========================================================
-   INPUTS — FOCUS MOTION
-   ========================================================= */
-.input {
-  width: 100%;
-  padding: 0.75rem 0.95rem;
-  border-radius: 10px;
-  border: 1px solid var(--border-soft);
-  background: var(--glass-bg);
-  color: var(--text-main);
-  transition:
-    border-color 150ms ease,
-    box-shadow 150ms ease,
-    transform 150ms ease;
-}
-
-.input::placeholder {
-  color: var(--text-muted);
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--brand);
-  box-shadow: 0 0 0 4px rgba(37,99,235,0.35);
-  transform: translateY(-1px);
-}
-
-/* =========================================================
-   BUTTONS — PRESS PHYSICS
-   ========================================================= */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  border-radius: 10px;
-  transition:
-    transform 120ms var(--ease-out),
-    box-shadow 120ms var(--ease-out);
-}
-
-.btn-primary {
-  background: linear-gradient(to right, #2563eb, #3b82f6);
-  color: white;
-  box-shadow: 0 16px 40px rgba(37,99,235,0.45);
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-}
-
-.btn-primary:active {
-  transform: translateY(1px);
-  box-shadow: 0 8px 20px rgba(37,99,235,0.35);
-}
-
-/* =========================================================
-   PAGE TRANSITIONS
-   ========================================================= */
-.animate-page {
-  animation: pageEnter 420ms var(--ease-out);
-}
-
-@keyframes pageEnter {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.98);
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+
+  html {
+    height: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.14), transparent 60%),
+      radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.14), transparent 60%), var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background 300ms var(--ease-out), color 300ms var(--ease-out);
+  }
+
+  html.dark body {
+    background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.25), transparent 60%),
+      radial-gradient(circle at bottom left, rgba(79, 70, 229, 0.25), transparent 60%), var(--bg-main);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  button {
+    font-family: inherit;
   }
 }
 
 /* =========================================================
-   FADE IN
+   COMPONENT LAYER - ESSENTIAL ONLY
    ========================================================= */
-.animate-fade-in {
-  animation: fadeIn 420ms var(--ease-out);
+@layer components {
+  /* Glass morphism effect */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(26px);
+    -webkit-backdrop-filter: blur(26px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Card with hover effect */
+  .card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 250ms var(--ease-out), transform 250ms var(--ease-out);
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+  }
+
+  /* Sidebar styling */
+  .sidebar {
+    box-shadow: inset -1px 0 0 var(--border-soft), var(--shadow-sm);
+  }
+
+  /* Custom buttons - complement Tailwind */
+  .btn {
+    @apply inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-blue-600 to-blue-500 text-white;
+    box-shadow: 0 16px 40px rgba(37, 99, 235, 0.45);
+  }
+
+  .btn-primary:hover {
+    @apply transform -translate-y-0.5;
+    box-shadow: 0 20px 50px rgba(37, 99, 235, 0.55);
+  }
+
+  .btn-primary:active {
+    @apply transform translate-y-0;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+  }
+
+  .btn-primary:disabled {
+    @apply opacity-60 cursor-not-allowed transform-none;
+  }
+
+  /* Custom input - complement Tailwind */
+  .input {
+    @apply w-full px-4 py-3 rounded-lg border transition-all duration-200;
+    background: var(--glass-bg);
+    border-color: var(--border-soft);
+    color: var(--text-main);
+  }
+
+  .input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .input:focus {
+    @apply outline-none transform -translate-y-px;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35);
+  }
+
+  /* Text utilities */
+  .text-secondary {
+    color: var(--text-sub);
+  }
+
+  .text-tertiary {
+    color: var(--text-muted);
+  }
 }
 
+/* =========================================================
+   UTILITIES LAYER - ANIMATIONS & EFFECTS
+   ========================================================= */
+@layer utilities {
+  /* Page animations */
+  .animate-fade-in {
+    animation: fadeIn 420ms var(--ease-out);
+  }
+
+  .animate-page {
+    animation: pageEnter 420ms var(--ease-out);
+  }
+
+  .animate-bounce-slow {
+    animation: bounceSlow 3s ease-in-out infinite;
+  }
+
+  /* Route transitions */
+  .route-enter {
+    animation: routeFadeIn 320ms var(--ease-out) both;
+  }
+
+  .route-exit {
+    animation: routeFadeOut 220ms ease-in both;
+  }
+}
+
+/* =========================================================
+   KEYFRAME ANIMATIONS
+   ========================================================= */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -273,15 +286,15 @@ header {
   }
 }
 
-/* =========================================================
-   🎬 ROUTE TRANSITIONS (ENTER / EXIT)
-   ========================================================= */
-.route-enter {
-  animation: routeFadeIn 320ms var(--ease-out) both;
-}
-
-.route-exit {
-  animation: routeFadeOut 220ms ease-in both;
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes routeFadeIn {
@@ -304,27 +317,74 @@ header {
   }
 }
 
-/* ============================================
-   🌓 LAYER-1: THEME TOGGLE BUTTON
-   ============================================ */
+@keyframes bounceSlow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpModal {
+  from {
+    transform: translateY(30px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInParticles {
+  to {
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   THEME TOGGLE BUTTON
+   ========================================================= */
 .theme-toggle {
   position: fixed;
   top: 1.5rem;
   right: 1.5rem;
   z-index: 1000;
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: 50%;
   width: 3rem;
   height: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 300ms var(--ease-out);
+  border-radius: 50%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-md);
+  transition: all 300ms var(--ease-out);
 }
 
 .theme-toggle:hover {
@@ -344,9 +404,9 @@ header {
   transform: rotate(20deg);
 }
 
-/* ============================================
-   🎥 LAYER-1: PARTICLE BACKGROUND
-   ============================================ */
+/* =========================================================
+   PARTICLE BACKGROUND
+   ========================================================= */
 .particle-background {
   position: fixed;
   top: 0;
@@ -359,21 +419,15 @@ header {
   animation: fadeInParticles 1s ease-in-out forwards;
 }
 
-@keyframes fadeInParticles {
-  to {
-    opacity: 1;
-  }
-}
-
 .particle-background canvas {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-/* ============================================
-   🔐 LAYER-1: LOGIN PAGE
-   ============================================ */
+/* =========================================================
+   LOGIN PAGE STYLES
+   ========================================================= */
 .login-container {
   min-height: 100vh;
   display: flex;
@@ -384,17 +438,17 @@ header {
 }
 
 .login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+  position: relative;
+  z-index: 1;
   background: var(--glass-bg);
   backdrop-filter: blur(26px);
   -webkit-backdrop-filter: blur(26px);
   border: 1px solid var(--glass-border);
   border-radius: 18px;
-  padding: 2.5rem;
-  width: 100%;
-  max-width: 420px;
   box-shadow: var(--shadow-lg);
-  position: relative;
-  z-index: 1;
   animation: loginCardEnter 420ms var(--ease-out);
 }
 
@@ -416,7 +470,6 @@ header {
 
 .login-header h1 {
   font-size: 1.875rem;
-  font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--text-main);
 }
@@ -426,9 +479,7 @@ header {
   font-size: 0.875rem;
 }
 
-/* ============================================
-   🔐 LAYER-1: OAUTH BUTTONS
-   ============================================ */
+/* OAuth buttons */
 .oauth-section {
   margin-bottom: 1.5rem;
 }
@@ -454,8 +505,8 @@ header {
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 200ms var(--ease-out);
   box-shadow: var(--shadow-xs);
+  transition: all 200ms var(--ease-out);
 }
 
 .oauth-btn:hover {
@@ -482,9 +533,7 @@ header {
   flex-shrink: 0;
 }
 
-/* ============================================
-   🔐 LAYER-1: DIVIDER
-   ============================================ */
+/* Divider */
 .divider {
   display: flex;
   align-items: center;
@@ -508,9 +557,7 @@ header {
   margin-left: 0.75rem;
 }
 
-/* ============================================
-   🔐 LAYER-1: LOGIN FORM
-   ============================================ */
+/* Login form */
 .login-form {
   display: flex;
   flex-direction: column;
@@ -554,6 +601,7 @@ header {
 
 .login-btn {
   padding: 0.75rem;
+  margin-top: 0.5rem;
   background: linear-gradient(to right, #2563eb, #3b82f6);
   color: white;
   border: none;
@@ -561,9 +609,8 @@ header {
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 200ms var(--ease-out);
-  margin-top: 0.5rem;
   box-shadow: 0 16px 40px rgba(37, 99, 235, 0.45);
+  transition: all 200ms var(--ease-out);
 }
 
 .login-btn:hover {
@@ -582,9 +629,9 @@ header {
   transform: none;
 }
 
-/* ============================================
-   📢 LAYER-1: TOAST NOTIFICATIONS
-   ============================================ */
+/* =========================================================
+   TOAST NOTIFICATIONS
+   ========================================================= */
 .toast-container {
   position: fixed;
   top: 1rem;
@@ -597,28 +644,17 @@ header {
 }
 
 .toast {
+  display: flex;
+  align-items: start;
+  gap: 0.75rem;
+  padding: 1rem;
   background: var(--glass-bg);
   backdrop-filter: blur(26px);
   -webkit-backdrop-filter: blur(26px);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
-  padding: 1rem;
   box-shadow: var(--shadow-lg);
-  display: flex;
-  align-items: start;
-  gap: 0.75rem;
   animation: slideInRight 300ms var(--ease-out);
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
 .toast.success {
@@ -630,12 +666,16 @@ header {
 }
 
 .toast.info {
-  border-left: 4px solid var(--brand);
+  border-left: 4px solid var(--info);
 }
 
-/* ============================================
-   🧠 LAYER-1: AI ONBOARDING MODAL
-   ============================================ */
+.toast.warning {
+  border-left: 4px solid var(--warning);
+}
+
+/* =========================================================
+   MODAL / ONBOARDING
+   ========================================================= */
 .onboarding-overlay {
   position: fixed;
   top: 0;
@@ -652,37 +692,17 @@ header {
   animation: fadeInOverlay 300ms var(--ease-out);
 }
 
-@keyframes fadeInOverlay {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .onboarding-modal {
+  width: 90%;
+  max-width: 500px;
+  padding: 2rem;
   background: var(--glass-bg);
   backdrop-filter: blur(26px);
   -webkit-backdrop-filter: blur(26px);
   border: 1px solid var(--glass-border);
   border-radius: 18px;
-  padding: 2rem;
-  max-width: 500px;
-  width: 90%;
   box-shadow: var(--shadow-lg);
   animation: slideUpModal 400ms var(--ease-out);
-}
-
-@keyframes slideUpModal {
-  from {
-    transform: translateY(30px) scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
 }
 
 .onboarding-modal h2 {
@@ -747,9 +767,9 @@ header {
   transform: translateY(0);
 }
 
-/* ============================================
-   📱 LAYER-1: RESPONSIVE DESIGN
-   ============================================ */
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
 @media (max-width: 640px) {
   .theme-toggle {
     top: 1rem;
@@ -784,5 +804,22 @@ header {
 
   .onboarding-modal h2 {
     font-size: 1.25rem;
+  }
+}
+
+/* =========================================================
+   PRINT STYLES
+   ========================================================= */
+@media print {
+  .theme-toggle,
+  .sidebar,
+  .toast-container,
+  .particle-background {
+    display: none;
+  }
+
+  body {
+    background: white;
+    color: black;
   }
 }

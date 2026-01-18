@@ -3,26 +3,31 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 
-from backend.database import SessionLocal
-from backend.models import Article
-from backend.auth import verify_owner
-from backend.schemas import (
+# =========================
+# LOCAL IMPORTS (DOCKER SAFE)
+# =========================
+from database import SessionLocal
+from models import Article
+from auth import verify_owner
+from schemas import (
     ArticleListOut,
     ArticleUpdateRequest
 )
 
-from backend.services.publishers.blogger import BloggerPublisher
-from backend.services.seo_generator import generate_seo
-from backend.services.blog_structure import generate_structured_blog
-from backend.services.html_builder import build_blog_html
-from backend.services.related_block import get_related_posts
-from backend.services.dashboard_service import (
+from services.publishers.blogger import BloggerPublisher
+from services.seo_generator import generate_seo
+from services.blog_structure import generate_structured_blog
+from services.html_builder import build_blog_html
+from services.related_block import get_related_posts
+from services.dashboard_service import (
     get_overview_stats,
     get_trending_memory_stats
 )
-from backend.services.auto_scheduler import pick_best_article_to_publish
+from services.auto_scheduler import pick_best_article_to_publish
 
-
+# =========================
+# ROUTER
+# =========================
 router = APIRouter(
     prefix="/api/admin",
     tags=["Admin Control"],
@@ -30,7 +35,7 @@ router = APIRouter(
 )
 
 # =========================
-# DATABASE
+# DATABASE DEPENDENCY
 # =========================
 def get_db():
     db = SessionLocal()
@@ -165,7 +170,7 @@ def run_auto_scheduler(db: Session = Depends(get_db)):
     }
 
 # =========================
-# PUBLISH (MANUAL SAFE)
+# MANUAL PUBLISH
 # =========================
 @router.post("/articles/{article_id}/publish")
 def publish_article(article_id: int, db: Session = Depends(get_db)):

@@ -27,7 +27,7 @@ const Dashboard = () => {
     }, []);
 
     if (loading) return <div className="p-10 text-center">Loading Dashboard...</div>;
-    if (!stats) return <div className="p-10 text-center text-red-500">Failed to load data. Check Backend.</div>;
+    if (!stats) return <div className="p-10 text-center text-red-500">Failed to load data. Check </div>;
 
     return (
         <div className="p-6 max-w-7xl mx-auto bg-slate-50 min-h-screen">

@@ -1,25 +1,66 @@
-# Core API
-fastapi
-uvicorn
-pydantic
+# ============================================
+# Core API Framework
+# ============================================
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+pydantic-settings==2.6.1
 
-# Environment variables
-python-dotenv
+# ============================================
+# Environment Variables
+# ============================================
+python-dotenv==1.0.1
 
-# Database
-sqlalchemy
+# ============================================
+# Database & ORM
+# ============================================
+sqlalchemy==2.0.36
 
-# Scheduler
-apscheduler
+# PostgreSQL driver (enabled)
+psycopg2-binary==2.9.10
 
-# AI / Gemini
-google-generativeai
+# ============================================
+# Background Tasks & Scheduling
+# ============================================
+apscheduler==3.10.4
 
-# Google APIs (Blogger publishing)
-google-api-python-client
-google-auth
-google-auth-oauthlib
-google-auth-httplib2
+# ============================================
+# AI / Gemini Integration
+# ============================================
+google-generativeai==0.8.3
 
-# HTTP utilities
-requests
+# ============================================
+# Google APIs (Blogger Publishing)
+# ============================================
+google-api-python-client==2.154.0
+google-auth==2.37.0
+google-auth-oauthlib==1.2.1
+google-auth-httplib2==0.2.0
+
+# ============================================
+# HTTP Utilities
+# ============================================
+requests==2.32.3
+
+# ============================================
+# Security & Validation
+# ============================================
+email-validator==2.1.1
+
+# ============================================
+# Security & Password Hashing (recommended)
+# ============================================
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+
+# ============================================
+# CORS & Security Headers
+# ============================================
+python-multipart==0.0.18
+
+# ============================================
+# Development & Testing (optional)
+# ============================================
+# pytest==8.3.4
+# pytest-asyncio==0.24.0
+# httpx==0.28.1

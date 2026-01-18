@@ -1,0 +1,48 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tech-blog-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      FRONTEND_URL: ${FRONTEND_URL}
+      DATABASE_URL: sqlite:////app/data/articles.db
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    networks:
+      - tech-blog-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8000
+    container_name: tech-blog-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - tech-blog-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
+networks:
+  tech-blog-network:
+    driver: bridge

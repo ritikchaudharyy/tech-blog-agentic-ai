@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
-from backend.models import Article
-from backend.models_trend_memory import TrendMemory
+from models import Article
+from models_trend_memory import TrendMemory
 
 # CTR rules (same as ctr_optimizer)
 WEAK_VIEW_THRESHOLD = 50

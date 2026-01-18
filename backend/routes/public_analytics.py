@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, cast, Date
 from datetime import timedelta, date
 
-from backend.database import SessionLocal
-from backend.models import Article
+from database import SessionLocal
+from models import Article
 
 router = APIRouter(
     prefix="/api/public/analytics",

@@ -46,3 +46,9 @@ dist/
 # Generated outputs
 output/
 node_modules
+
+# Docker volumes / local data
+data/
+
+# dotenv variants (extra safety)
+.env.example

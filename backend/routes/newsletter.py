@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from backend.database import SessionLocal
-from backend.auth import verify_owner
-from backend.services.newsletter_ai import generate_weekly_newsletter
+from database import SessionLocal
+from auth import verify_owner
+from services.newsletter_ai import generate_weekly_newsletter
 
 router = APIRouter(
     prefix="/api/admin/newsletter",

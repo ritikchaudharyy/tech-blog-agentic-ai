@@ -1,8 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr
 import os
-
-from backend.auth import resolve_role
+from auth import resolve_role
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 

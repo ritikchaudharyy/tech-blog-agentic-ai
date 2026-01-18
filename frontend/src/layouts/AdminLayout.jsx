@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
+import { Home, FileText, BarChart3, Settings, LogOut, Sparkles } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 
 const AdminLayout = ({ children }) => {
@@ -7,58 +8,83 @@ const AdminLayout = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem('API_KEY');
     localStorage.removeItem('USER_ROLE');
+    localStorage.removeItem('auth_session');
     navigate('/login');
   };
 
+  const navItems = [
+    { to: '/admin', label: 'Dashboard', icon: Home, end: true },
+    { to: '/admin/content', label: 'Content', icon: FileText },
+    { to: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
+    { to: '/admin/settings', label: 'Settings', icon: Settings },
+  ];
+
   return (
-    <div className="min-h-screen flex bg-muted dark:bg-slate-950">
+    <div className="min-h-screen flex bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Sidebar */}
-      <aside className="sidebar w-64 min-h-screen px-4 py-6 bg-secondary dark:bg-slate-900 border-r border-light dark:border-white/10 flex flex-col">
-        {/* Brand + Theme Toggle */}
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-lg font-semibold text-primary dark:text-white">
-            Antigravity Admin
-          </h2>
-          <ThemeToggle />
+      <aside className="w-64 min-h-screen bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col shadow-sm">
+        {/* Brand */}
+        <div className="px-6 py-6 border-b border-slate-200/50 dark:border-slate-800/50">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
+                AI Content Platform
+              </h2>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                Owner Dashboard
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-col gap-3 text-sm flex-1">
-          <NavLink
-            to="/admin"
-            end
-            className={({ isActive }) =>
-              isActive
-                ? 'font-semibold text-white bg-blue-600 px-3 py-2 rounded'
-                : 'opacity-80 hover:opacity-100 px-3 py-2'
-            }
-          >
-            Dashboard
-          </NavLink>
-
-          <NavLink
-            to="/admin/content"
-            className={({ isActive }) =>
-              isActive
-                ? 'font-semibold text-white bg-blue-600 px-3 py-2 rounded'
-                : 'opacity-80 hover:opacity-100 px-3 py-2'
-            }
-          >
-            Content
-          </NavLink>
+        <nav className="flex-1 px-4 py-6 space-y-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${
+                    isActive
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <Icon className={`w-5 h-5 ${isActive ? '' : 'group-hover:scale-110 transition-transform'}`} />
+                    <span className="font-medium text-sm">{item.label}</span>
+                  </>
+                )}
+              </NavLink>
+            );
+          })}
         </nav>
 
-        {/* Logout */}
-        <button
-          onClick={handleLogout}
-          className="mt-6 text-xs opacity-70 hover:opacity-100 text-left px-3 py-2 rounded hover:bg-red-500/10"
-        >
-          Logout
-        </button>
+        {/* Theme Toggle & Logout */}
+        <div className="px-4 py-4 border-t border-slate-200/50 dark:border-slate-800/50 space-y-2">
+          <div className="px-4 py-2">
+            <ThemeToggle />
+          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-600 transition-all duration-200 group"
+          >
+            <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            <span className="font-medium text-sm">Logout</span>
+          </button>
+        </div>
       </aside>
 
-      {/* Main */}
-      <main className="flex-1 p-10 text-primary dark:text-slate-100">
+      {/* Main Content */}
+      <main className="flex-1 overflow-auto">
         {children}
       </main>
     </div>
