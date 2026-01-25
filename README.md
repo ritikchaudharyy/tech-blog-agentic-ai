@@ -1,7 +1,7 @@
 # 🧠 Tech Blog Agentic AI
 ### Canonical-First, Agent-Driven Knowledge Publishing Platform
 
-Tech Blog Agentic AI is a **disciplined automation system** for generating and publishing professional tech blogs using an **agentic AI architecture**.  
+Tech Blog Agentic AI or AI content Platform is a **disciplined automation system** for generating and publishing professional tech blogs using an **agentic AI architecture**.  
 The platform is designed with **real-world editorial and SEO safety** in mind — not just content generation.
 
 -----------------------------------------------------------
