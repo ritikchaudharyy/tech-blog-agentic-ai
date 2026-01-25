@@ -6,7 +6,7 @@ The platform is designed with **real-world editorial and SEO safety** in mind �
 
 -----------------------------------------------------------
 
-# 🖥 Platform Preview
+## 🖥 Platform Preview
 
 🔐 Secure Owner Login
 
@@ -16,7 +16,7 @@ Role-based secure access for platform owners before entering the content workspa
 
 -----------------------------------------------------------
 
-# 📊 Owner Dashboard – Content Control Center
+## 📊 Owner Dashboard – Content Control Center
 
 <img width="1919" height="1038" alt="Screenshot 2026-01-25 172035" src="https://github.com/user-attachments/assets/103dd560-6e35-4573-8274-b63a0f4cbff5" />
 
