@@ -1,9 +1,15 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+
 import UserHome from './pages/UserHome';
 import ArticleView from './pages/ArticleView';
+
 import AdminDashboard from './pages/AdminDashboard';
 import AdminContent from './pages/AdminContent';
+
 import ProtectedRoute from './components/ProtectedRoute';
 import RouteTransition from './components/RouteTransition';
 
@@ -12,6 +18,8 @@ const App = () => {
 
   return (
     <Routes location={location} key={location.pathname}>
+
+      {/* ---------- PUBLIC AUTH ROUTES ---------- */}
       <Route
         path="/login"
         element={
@@ -21,7 +29,25 @@ const App = () => {
         }
       />
 
-      {/* User */}
+      <Route
+        path="/forgot-password"
+        element={
+          <RouteTransition>
+            <ForgotPassword />
+          </RouteTransition>
+        }
+      />
+
+      <Route
+        path="/reset-password"
+        element={
+          <RouteTransition>
+            <ResetPassword />
+          </RouteTransition>
+        }
+      />
+
+      {/* ---------- USER ROUTES ---------- */}
       <Route
         path="/app"
         element={
@@ -44,7 +70,7 @@ const App = () => {
         }
       />
 
-      {/* Admin */}
+      {/* ---------- ADMIN ROUTES ---------- */}
       <Route
         path="/admin"
         element={
@@ -67,6 +93,7 @@ const App = () => {
         }
       />
 
+      {/* ---------- FALLBACK ---------- */}
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
