@@ -4,7 +4,25 @@
 Tech Blog Agentic AI is a **disciplined automation system** for generating and publishing professional tech blogs using an **agentic AI architecture**.  
 The platform is designed with **real-world editorial and SEO safety** in mind — not just content generation.
 
----------------------------------------------
+-----------------------------------------------------------
+
+# 🖥 Platform Preview
+
+🔐 Secure Owner Login
+
+<img width="1919" height="982" alt="Screenshot 2026-01-25 180548" src="https://github.com/user-attachments/assets/6fa87cda-209f-4d22-91d9-6941cfbe206d" />
+
+Role-based secure access for platform owners before entering the content workspace.
+
+-----------------------------------------------------------
+
+# 📊 Owner Dashboard – Content Control Center
+
+<img width="1919" height="1038" alt="Screenshot 2026-01-25 172035" src="https://github.com/user-attachments/assets/103dd560-6e35-4573-8274-b63a0f4cbff5" />
+
+The dashboard acts as the single control panel for managing content, drafts, analytics, and access control.
+
+------------------------------------------------------------
 
 ## 🎯 Project Vision
 
